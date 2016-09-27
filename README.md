@@ -2,8 +2,8 @@
 
 This is my personal learning record repository about Angular2.
 
-* [series00][#Series-00]
-* [series01][#Series-01]
+* [series00](#Series-00)
+* [series01](#Series-01)
 
 ## Series 00
 
