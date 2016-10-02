@@ -3,6 +3,7 @@
 This is my personal learning record repository for Angular2. The related materials are from Udemy Angular2 course and Angular2 official page, which you could find the link in [Reference](#reference). Below is the list of the updating learning content.
 
   * [Entry-00 Start](#entry-00-start)
+  * [Entry-01 Basic](#entry-01-basic)
 
 ---
 
@@ -10,6 +11,8 @@ This is my personal learning record repository for Angular2. The related materia
 
   1. **Architecture of Angular2**
       ![Alt text](https://angular.io/resources/images/devguide/architecture/overview2.png)
+      
+      Basically, There are four main parts of Angular2, which are `Component`, `Directives`, `Routers` and `Services`
       
   2. **Environment Setup**
   
@@ -100,7 +103,136 @@ This is my personal learning record repository for Angular2. The related materia
           
           This will automatically compile the typescripte code into javascript and run it in you browser.
           
+---
+
+## Entry-01 Basic
+
+  1. **Component**
+  
+      `Component` encapsulates the template, data and the behaviour of view. 
+      
+      Each Angular2 App has at least a `root` component and each components can have multiple sub-components.
+      
+      Like below, the root componnet has three sub-components, which are sidebar, courses and navbar. And also each sub-component can have their child-components, like courses component could have rating components and feedback components.
+      
+      ![Alt text](http://remo.site/img/components.png)
+      
+  2. **Create a Component**
+  
+      Here, I create a Courses component. The name of this file is called `courses.component.ts` and is located under the `./app/`.
+      
+      ```Typescript
+      import {Component} from 'angular2/core';
+      
+      @Component({
+           selector: 'courses',    // To use just like a HTML tag: <courses></courses>
+           template: '<h2>Courses</h2>'    // HTML code here to display the component view
+      })
+      export class CoursesComponent { 
+      }
+      ```
+      
+  3. **Using Component**
+      
+      Go to the `./app/app.component.ts`, and add previous component.
+      
+      ```Typescript
+      import {Component} from 'angular2/core';
+      import {CoursesComponent} from './courses.component';    // Import CoursesComponent.   NOTE: NO '.ts' at end
+      
+      @Component({
+           selector: 'my-app',
+           template: `    // Use backquotes to enable mutiple line code
+            <h2>{{ title }}</h2>    // Interpolation, One way binding.
+            <courses></courses>    // Use CoursesComponent here
+           `,
+           directives: [CoursesComponent]    // Important! Add CoursesComponent reference to root component
+      })
+      export class AppComponent {
+          title = "The title of this page";
+      }
+      ```
+      
+      NOTE: `Directive` is a class that allow us to extend or control DOM (Document Object Model). Above we defined a new element called `courses`, so we can use it like HTML tag `<courses></courses>`.
+      
+  4. **Run It**
+      
+      After you saved the change of `app.component.ts`, the Angular2 will automatically recognise the code change and complier it as well. The browser will fresh and the new component will displayed corresponding. You can inspect the page DOM by using Chrome developer tools. It will display like this.
+      
+      ```html
+      <courses>
+          <h2>Courses</h2>
+      </courses>
+      ```
+      
+  5. **More**
+  
+      * ngFor
+      
+          If there are multiple object need to display in template, `*ngFor` is the best way to implement it.
+
+          ```Typescript
+          import {Component} from 'angular2/core';
+          import {CoursesComponent} from './courses.component';
+
+          @Component({
+               selector: 'my-app',
+               template: `
+                <ul>
+                   <li *ngFor="#course of courses">    // Use '*ngFor' to display multiple objects, just like 'for' loop
+                       {{ course }}
+                   </li>
+                </ul>
+               `,
+               directives: [CoursesComponent]
+          })
+          export class AppComponent {
+              courses = ["Course1", "Course2", "Course3"];    // Defined three courses
+          }
+          ```
           
+      * Service
+      
+          `Service` is mainly used to `Data Access`, `Login`, `Business Logic`, and `Configuration`.
+      
+          Let's create a service called `CourseService` and the corresponding file named `course.service.ts` under the `./app/`. The aim is to provide the data to `CourseComponent`.
+      
+          ```Typescript
+          export class CourseService {
+              getCourses(): string[] {    // The return type is a string array
+                  return ["Course1", "Course2", "Course3"];
+              }
+          }
+          ```
+
+          Then, change the `courses.component.ts`.
+          
+          ```Typescript
+          import {Component} from 'angular2/core';
+          import {CourseService} from './course.service';    // No '.ts' at end
+
+          @Component({
+               selector: 'courses',
+               template: `
+                    <ul>
+                       <li *ngFor="#course of courses">
+                           {{ course }}
+                       </li>
+                    </ul>
+               `,
+               providers: [CourseService]    // Add dependency
+          })
+          export class CoursesComponent {
+              courses;   // To store courses from service
+              
+              constructor(courseService: CourseService) {    // Dependency Injection
+                  this.courses = courseService.getCourses();
+              }
+          }
+          ```
+          
+          NOTE: [Dependency Injection](http://stackoverflow.com/questions/130794/what-is-dependency-injection)
+
 ---
 
 # Reference
