@@ -153,8 +153,6 @@ This is my personal learning record repository for Angular2. The related materia
       }
       ```
       
-      NOTE: `Directive` is a class that allow us to extend or control DOM (Document Object Model). Above we defined a new element called `courses`, so we can use it like HTML tag `<courses></courses>`.
-      
   4. **Run It**
       
       After you saved the change of `app.component.ts`, the Angular2 will automatically recognise the code change and complier it as well. The browser will fresh and the new component will displayed corresponding. You can inspect the page DOM by using Chrome developer tools. It will display like this.
@@ -167,7 +165,7 @@ This is my personal learning record repository for Angular2. The related materia
       
   5. **More**
   
-      * ngFor
+      * __ngFor__
       
           If there are multiple object need to display in template, `*ngFor` is the best way to implement it.
 
@@ -191,7 +189,7 @@ This is my personal learning record repository for Angular2. The related materia
           }
           ```
           
-      * Service
+      * __Service__
       
           `Service` is mainly used to `Data Access`, `Login`, `Business Logic`, and `Configuration`.
       
@@ -232,6 +230,68 @@ This is my personal learning record repository for Angular2. The related materia
           ```
           
           NOTE: [Dependency Injection](http://stackoverflow.com/questions/130794/what-is-dependency-injection)
+          
+      * __Directive__
+      
+      Directive is a class that allow us to extend or control DOM (Document Object Model). Below it will create a directive to auto grow the input box.
+      
+      ```Typescript
+      import {Directive, ElementRef, Renderer} from 'angular2/core'
+
+      @Directive({
+          selector: '[autoGrow]',
+          host: {
+              '(focus)': 'onFocus()',
+              '(blur)': 'onBlur()'
+          }
+      })
+      export class AutoGrowDirective {
+          constructor(private el: ElementRef, private renderer: Renderer){
+
+          }
+          onFocus(){
+              this.renderer.setElementStyle(this.el.nativeElement, 'width', '200');
+          }
+          onBlur(){
+              this.renderer.setElementStyle(this.el.nativeElement, 'width', '120');
+          }
+      }
+      ```
+      
+      And it can be used in `CoursesComponent` like below:
+      
+      ```Typescript
+      @Component({
+      selector: 'courses',
+      template: `
+        <h2>Courses</h2>
+        {{ title }}
+        <input type="text" autoGrow />
+        <ul>
+            <li *ngFor="#course of courses">
+            {{ course }}
+            </li>
+        </ul>
+        `,
+      providers: [CourseService],
+      directives: [AutoGrowDirective]
+      })
+      ```
+      
+      * __Template__ & __Style__
+      
+      In each component, you can change the `template` property into `templateUrl`. This will allow you to create a `xxx.component.html` file to layout the HTML template separately, as well as `stylesheet`. Use the `CoursesComponent` as a example.
+      
+      ```
+      |-- app
+      |   |-- courses.component.ts
+      |   |-- courses.component.html
+      |   |-- courses.component.css
+      |   |-- boot.ts
+      |   |-- boot.js.map
+      |   `-- boot.js
+      ........
+      ```
 
 ---
 
