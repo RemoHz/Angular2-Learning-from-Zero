@@ -4,6 +4,7 @@ This is my personal learning record repository for Angular2. The related materia
 
   * [Entry-00 Start](#entry-00-start)
   * [Entry-01 Basic](#entry-01-basic)
+  * [Entry-02 Data Binding](#entry-02-data-binding)
 
 ---
 
@@ -292,6 +293,107 @@ This is my personal learning record repository for Angular2. The related materia
       |   `-- boot.js
       ........
       ```
+
+---
+
+## Entry-02 Data Binding
+
+  1. **One way binding**
+  
+      There are three ways to implement one way binding, which are `Interpolation`, `DOM property binding` and `bind-DOM`. Those three ways are technically equal. Just like below.
+      
+       ```Typescript
+      import {Component} from 'angular2/core';
+      
+      @Component({
+           selector: 'my-app',
+           template: `
+            <img src="{{ imageUrl }}" />    // Interpolation, recommend use to load dynamic value
+            <img [src]="imageUrl" />        // DOM property binding
+            <img bind-src="imageUrl" />     // bind-DOM, rare to use
+           `
+      })
+      export class AppComponent {
+          imageUrl = "path to the image";
+      }
+      ```
+      
+      If the component property changed, the value of DOM will change automatically. BUT if the value of DOM changed, the component property will not changed corresponding. This is called `One-way bind`.
+
+  2. **Class Binding** & **Style Binding**
+
+      `Class binding` is aim to add additional class to DOM elements based on some condition, `Style binding` is in the same process. Below is an example to add `active` class to the button and background color to inline style.
+      
+       ```Typescript
+      import {Component} from 'angular2/core';
+      
+      @Component({
+           selector: 'my-app',
+           template: `
+            <button 
+                class="btn btn-primary" 
+                [class.active]="isActive"    // The active class will be add when isActive is true
+                [style.backgroundColor]="isActive ? 'blue' : 'gray'"    // The background color will change based on isActive
+            >
+            Submit</button>
+           `
+      })
+      export class AppComponent {
+          isActive = true;
+      }
+      ```
+
+  3. **Event Binding**
+  
+      `Event binding` is handle event rise from the DOM, like click, mouthmove, hover and etc.
+      
+       ```Typescript
+      import {Component} from 'angular2/core';
+      
+      @Component({
+           selector: 'my-app',
+           template: `
+            <div (click)="onDivClick()">
+                <button (click)="onClick($event)">Submit</button>    // Event binding
+            </div>
+           `
+      })
+      export class AppComponent {
+          onDivClick() {
+              console.log("Div clicked");
+          }
+          
+          onClick($event) {
+              $event.stopPropagation();    // Use to ignore parent DOM event
+              console.log("Clicked", $event);
+          }
+      }
+      ```
+
+  4. **Two-way Binding**
+      
+      `Two-way binding` is actually the combination of `property binding` and `event binding`. There are three ways to realise it.
+      
+       ```Typescript
+      import {Component} from 'angular2/core';
+      
+      @Component({
+           selector: 'my-app',
+           template: `
+               <input type="text" [value]="title" (input)="title = $event.target.value" />   // Original realise
+               <input type="text" [(ngModel)]="title />   // Recomment to use
+               <input type="text" bindon-ngModel="title" />
+               
+               Preview: {{ title }}
+           `
+      })
+      export class AppComponent {
+          title = "Hello world";
+      }
+      ```
+
+      If the input value changed, the Preview will changed at the same time (Means the compoment property value changed as well).
+
 
 ---
 
