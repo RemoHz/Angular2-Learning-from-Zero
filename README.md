@@ -5,6 +5,7 @@ This is my personal learning record repository for Angular2. The related materia
   * [Entry-00 Start](#entry-00-start)
   * [Entry-01 Basic](#entry-01-basic)
   * [Entry-02 Data Binding](#entry-02-data-binding)
+  * [Entry-03 Input & Output](#entry-03-input-&-output)
 
 ---
 
@@ -393,6 +394,62 @@ This is my personal learning record repository for Angular2. The related materia
       ```
 
       If the input value changed, the Preview will changed at the same time (Means the compoment property value changed as well).
+
+---
+
+## Entry-03 Input & Output
+
+  1. **Component API**
+  
+      In real project, there are always need to pre-fill the component status from dabase, not just initialled to empty. And also need to pass the component data to trigger corresponding events (Output). So here we need to use `Input` and `Output` to generate the component API like below.
+      
+      ![Alt text](http://remo.site/img/component_api.png)
+      
+  2. **Input**
+  
+      By using `@Input` annotation, we could realise the input properties binding.
+      
+      ```Typescript
+      import {Input} from 'angular2/core';    // Import 'Input'
+      
+      @Component({
+          inputs: ['isFavorite:is-favorite']    // Another way to announce the input attributes
+      })
+      export class FavoriteComponent {
+          @Input('is-favorite') isFavorite = false;    // Make isFavorite to input, alias as 'is-favorite'
+      }
+      ```
+      
+      And use the FavoriteComponent in host component.
+      
+      ```
+      <favorite [is-favorite]="post.isFavorite"></favorite>   // post is the property of host component
+      ```
+
+  3. **Output**
+  
+      Similar to `Input`, by using `@Output` annotation, we could realise the output properties binding.
+      
+      ```Typescript
+      import {Output, EventEmitter} from 'angular2/core';    // Import 'Output' and 'EventEmitter'
+      
+      @Component({
+          outputs: ['change:favoriteChange']   // Another way to announce the output attributes
+      })
+      export class FavoriteComponent {
+          @Output('favorite-change') change = new EventEmitter();  // Define 'change' event emitter
+          
+          onClick() { 
+              this.change.emit({ newValue: this.isFavorite });    // Publish 'change' event, the value is object
+          } 
+      }
+      ```
+      
+      And use the FavoriteComponent in host component.
+      
+      ```
+      <favorite [is-favorite]="post.isFavorite"></favorite>   // Once it clicked, trigger the change event. 'Post' is the property of host component
+      ```
 
 
 ---
