@@ -334,7 +334,7 @@ This is my personal learning record repository for Angular2. The related materia
             <button 
                 class="btn btn-primary" 
                 [class.active]="isActive"    // The active class will be add when isActive is true
-                [style.backgroundColor]="isActive ? 'blue' : 'gray'"    // The background color will change based on isActive
+                [style.backgroundColor]="isActive ? 'blue' : 'gray'"    // The background color will change based on 'isActive'
             >
             Submit</button>
            `
@@ -382,7 +382,7 @@ This is my personal learning record repository for Angular2. The related materia
            selector: 'my-app',
            template: `
                <input type="text" [value]="title" (input)="title = $event.target.value" />   // Original realise
-               <input type="text" [(ngModel)]="title />   // Recomment to use
+               <input type="text" [(ngModel)]="title />   // Recommend to use
                <input type="text" bindon-ngModel="title" />
                
                Preview: {{ title }}
@@ -423,7 +423,7 @@ This is my personal learning record repository for Angular2. The related materia
       And use the FavoriteComponent in host component.
       
       ```
-      <favorite [is-favorite]="post.isFavorite"></favorite>   // post is the property of host component
+      <favorite [is-favorite]="post.isFavorite"></favorite>   // Post is the property of host component
       ```
 
   3. **Output**
@@ -440,7 +440,7 @@ This is my personal learning record repository for Angular2. The related materia
           @Output('favorite-change') change = new EventEmitter();  // Define 'change' event emitter
           
           onClick() { 
-              this.change.emit({ newValue: this.isFavorite });    // Publish 'change' event, the value is object
+              this.change.emit({ newValue: this.isFavorite });    // Publish 'change' event, the type is object
           } 
       }
       ```
